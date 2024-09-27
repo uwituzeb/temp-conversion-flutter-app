@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
   double inTemp = 0.0, outTemp = 0.0;
   bool isFahrenheit = true;
 
@@ -24,7 +24,17 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Temperature Conversion App'),
+        title: const Center(
+          child: Text(
+            'Temperature Conversion App',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.pink,
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -47,8 +57,7 @@ class _HomeState extends State<Home> {
               },
             ),
             const SizedBox(height: 20),
-            Column(
-              
+            Row(
               children: [
                 Expanded(
                   child: RadioListTile<bool>(
@@ -79,6 +88,10 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: convertTemperature,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink,
+                foregroundColor: Colors.white,
+              ),
               child: const Text('Convert'),
             ),
             const SizedBox(height: 20),
