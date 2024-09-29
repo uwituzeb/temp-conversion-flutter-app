@@ -9,6 +9,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   double inTemp = 0.0, outTemp = 0.0;
   bool isFahrenheit = true;
+  List<String> conversionHistory = [];
 
   void convertTemperature() {
     setState(() {
@@ -17,6 +18,23 @@ class HomeState extends State<Home> {
       } else {
         outTemp = inTemp * 9 / 5 + 32;
       }
+      updateConversionHistory();
+    });
+  }
+
+  void updateConversionHistory(){
+    String historyEntry = '${inTemp.toStringAsFixed(2)} ${isFahrenheit ? '°F' : '°C'} = ${outTemp.toStringAsFixed(2)} ${isFahrenheit ? '°C' : '°F'}';
+    conversionHistory.insert(0, historyEntry);
+    if(conversionHistory.length > 5){
+      conversionHistory.removeLast();
+    }
+
+  }
+
+  void resetConversion(){
+    setState(() {
+      inTemp = 0.0;
+      outTemp = 0.0;
     });
   }
 
@@ -79,6 +97,7 @@ class HomeState extends State<Home> {
                     onChanged: (bool? value) {
                       setState(() {
                         isFahrenheit = value ?? true;
+                        resetConversion();
                       });
                     },
                   ),
@@ -99,6 +118,21 @@ class HomeState extends State<Home> {
               'Result: ${outTemp.toStringAsFixed(2)} ${isFahrenheit ? '°C' : '°F'}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 20),
+            const Text(
+              'Conversion History:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: conversionHistory.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(conversionHistory[index]),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
