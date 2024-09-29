@@ -10,6 +10,8 @@ class HomeState extends State<Home> {
   double inTemp = 0.0, outTemp = 0.0;
   bool isFahrenheit = true;
   List<String> conversionHistory = [];
+  final TextEditingController _temperatureController = TextEditingController();
+
 
   void convertTemperature() {
     setState(() {
@@ -19,6 +21,8 @@ class HomeState extends State<Home> {
         outTemp = inTemp * 9 / 5 + 32;
       }
       updateConversionHistory();
+      _temperatureController.clear();
+      inTemp = 0.0;
     });
   }
 
@@ -54,12 +58,14 @@ class HomeState extends State<Home> {
         backgroundColor: Colors.pink,
         
       ),
-      body: Padding(
+      body: SafeArea(child: SingleChildScrollView(
+        child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             TextField(
+              controller: _temperatureController,
               decoration: InputDecoration(
                 hintText: 'Enter temperature',
                 labelText: isFahrenheit
@@ -85,6 +91,7 @@ class HomeState extends State<Home> {
                     onChanged: (bool? value) {
                       setState(() {
                         isFahrenheit = value ?? true;
+                        resetConversion();
                       });
                     },
                   ),
@@ -110,8 +117,9 @@ class HomeState extends State<Home> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.pink,
                 foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 15),
               ),
-              child: const Text('Convert'),
+              child: const Text('Convert', style: TextStyle(fontSize: 18)),
             ),
             const SizedBox(height: 20),
             Text(
@@ -122,8 +130,16 @@ class HomeState extends State<Home> {
             const Text(
               'Conversion History:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-            Expanded(
+            const SizedBox(height: 10),
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            
               child: ListView.builder(
                 itemCount: conversionHistory.length,
                 itemBuilder: (context, index) {
@@ -132,10 +148,13 @@ class HomeState extends State<Home> {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
+      ))
+      
+      
     );
   }
 }
